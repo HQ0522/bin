@@ -1,13 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 # Create your models here.
 # User数据表
 class User(AbstractUser):
     realname = models.CharField('真实姓名', max_length=16,null = False, blank = False)
     email = models.EmailField('用户邮箱', unique = True, null = False, blank = False)
-    phone = models.CharField('电话号码',max_length=11,unique = True,null = False, blank = False)
+    phone = models.CharField('电话号码',max_length=24,unique = True,null = False, blank = False)
 
     def __str__(self):
         return self.username
@@ -16,13 +15,11 @@ class User(AbstractUser):
 class Course(models.Model):
     title = models.CharField('课程标题',max_length=200, null = False,  blank = False)
     tag = models.CharField('课程标签', max_length=50, null=False, blank=False)
-    description = models.TextField('课程描述', null = False,  blank = False)
+    description = models.TextField('课程描述')
     source = models.CharField('课程来源', max_length=100, null=False, blank=False)
     href = models.URLField('课程链接', unique = True,null = False,  blank = False)
     imgurl = models.URLField('图片链接', unique = True,null = False,  blank = False)
 
-    def __str__(self):
-        return self.title
 
 from django.db.models import Avg
 # Rating数据表
@@ -31,10 +28,6 @@ class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
     mark = models.DecimalField('课程评分',max_digits=3, decimal_places=1)
     create_time = models.DateTimeField(verbose_name="发布时间", auto_now_add=True)
-    @property
-    def avg_mark(self):
-        average = Rating.objects.all().aggregate(Avg('mark'))['mark__avg']
-        return average
 
 # Collection数据表
 class Collection(models.Model):

@@ -30,8 +30,8 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li id="all-courses"><a href="{% url 'index' %}">所有课程</a></li>
-                    <li id="favorite-courses"><a href="{% url 'index' %}">收藏课程</a></li>
-                    <li id="recommended-courses"><a href="{% url 'index' %}">推荐课程</a></li>
+                    <li id="favorite-courses"><a href="{% url 'favor' %}">收藏课程</a></li>
+                    <li id="recommended-courses"><a href="{% url 'recommend' %}">推荐课程</a></li>
                 </ul>
 
                 <form class="navbar-form navbar-right" role="search" method="get" action="{% url 'search' %}">
@@ -46,7 +46,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="#">个人信息</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{% url 'logout' %}">登出</a></li>
+                            <li><a href="{% url 'logout' %}">退出</a></li>
                         </ul>
                     </li>
                     {% else %}
@@ -65,10 +65,11 @@
         {% endblock %}
     </div>
 
+
     <!--底部-->
-    <footer class="footer" style="text-align: center;padding: 40px 0">
+    <footer class="navbar-fixed-bottom"  style="height:2.7em; text-align: center;background-color: #f8f8f8; line-height:2.7em">
         <div class="container">
-            <p class="text-muted">版权所有 &copy; 2023 课程推荐系统</p>
+            <p class="text-muted" style="color: #777">版权所有 &copy; 2023 课程推荐系统</p>
         </div>
     </footer>
 

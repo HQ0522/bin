@@ -1,16 +1,12 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render, HttpResponse, redirect
 from .models import Course
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
-
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm,RegisterForm
 
 
 # Create your views here.
@@ -20,7 +16,7 @@ def index(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request,'infor/index.html',locals())
+    return render(request, 'infor/index.html', locals())
 
 
 def search(request):
@@ -37,7 +33,7 @@ def search(request):
     return render(request, 'infor/search.html', {'page_obj': page_obj, 'query': query})
 
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -45,8 +41,7 @@ def login(request):
         if user is not None:
             login(request, user)
             # Redirect to a success page
-            return redirect('success')
-            print('成功了吗')
+            return redirect('index')
         else:
             error_message = '用户名或密码不正确'
             return render(request, 'infor/login.html', {'error_message': error_message})
@@ -54,31 +49,38 @@ def login(request):
         return render(request, 'infor/login.html')
 
 
-
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('home')
-    else:
-        form = RegisterForm()
-    return render(request, 'infor/register.html', {'form': form})
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        realname = request.POST.get('realname')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        if password == confirm_password:
+            user = User.objects.create_user(username=username, email=email, password=password, realname=realname,
+                                            phone=phone)
+            user.save()
+            user = authenticate(request, username=username, password=password)
+            return redirect('index')
+    return render(request, 'infor/register.html', locals())
 
 
-def logout(request):
+def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('index')
+
 
 @login_required
-def recommend1(requst):
-    return render(requst,'infor/recommend1')
-#infor/inforlist.html
+def recommend(requst):
+    return render(requst, 'infor/recommend.html')
+
+
+# infor/inforlist.html
+
+@login_required
+def favor(request):
+    return render(request, 'infor/favor.html')
+
 
 from django.contrib import messages
-
-
